@@ -12,6 +12,7 @@ app.get("/", (req, res) => {
     /*let cal = test("2018", "03", "06");
     html += cal;*/
     html += "<script>" + client + "</script>";
+    html += "<script>" + client + "</script>";
     html += "</body>";
     res.send(html);
 });
