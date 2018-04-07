@@ -31,36 +31,32 @@ class Calendar {
     }
 
     parseSettings(settings) {
-        function parseObject(settingsObj, newSettingsObj) {
+        function parseObject(newSettingsObj, settingsObj) {
             if(settingsObj === null || settingsObj === undefined)
                 return undefined;
-            console.log(settingsObj, newSettingsObj);
             for(let key of Object.keys(settingsObj)) {
-                if(settingsObj[key].constructor === Array) {
-                    settingsObj[key] = newSettingsObj[key];
-                }
-                else if(typeof settingsObj[key] === "object" && newSettingsObj[key] !== undefined) {
-                    settingsObj[key] = parseObject(settingsObj[key], newSettingsObj[key]);
-                }else if(newSettingsObj[key] !== undefined) {
-                    settingsObj[key] = newSettingsObj[key];
+                if(newSettingsObj[key] === undefined || newSettingsObj[key] === null) {
+                    newSettingsObj[key] = settingsObj[key];
+                }else if(typeof newSettingsObj[key] === "object" && settingsObj[key] !== undefined && newSettingsObj[key].constructor !== Array) {
+                    newSettingsObj[key] = parseObject(newSettingsObj[key], settingsObj[key]);
                 }
             }
-            for(let key of Object.keys(newSettingsObj)) {
-                if(settingsObj[key])
-                    continue;
-                settingsObj[key] = newSettingsObj[key];
-            }
-            return settingsObj
+            return newSettingsObj;
         }
 
-        this.settings = defaultSettings;
-        this.parseHighlights(settings, parseObject);
+        this.settings = {};
+        this.settings.highlights = this.parseHighlights(defaultSettings, settings, parseObject);
+        for(let key of Object.keys(defaultSettings)) {
+            if(this.settings[key] === undefined || this.settings[key] === null) {
+                this.settings[key] = defaultSettings[key];
+            }
+        }
         for(let key of Object.keys(defaultSettings)) {
             if(settings[key] !== undefined && settings[key] !== null) {
                 if(settings[key].constructor === Array) {
                     this.settings[key] = settings[key];
                 }else if(typeof settings[key] === "object") {
-                    let tmp = parseObject(this.settings[key], settings[key]);
+                    let tmp = parseObject(settings[key], this.settings[key]);
                     if(tmp !== undefined)
                         this.settings[key] = tmp;
                 }else {
@@ -76,28 +72,22 @@ class Calendar {
         }
     }
 
-    parseHighlights(settings, parseObject) {
-        function fill(setting, def) {
-            for(let key of Object.keys(def)) {
-                if(setting[key] === undefined || setting[key] === null) {
-                    //TODO: Handle deep objects
-                    setting[key] = def[key];
-                }
-            }
-            return setting;
-        }
-        for(let key of Object.keys(this.settings.highlights)) {
-            this.settings.highlights[key] = fill(this.settings.highlights[key], this.settings.highlights._default);
+    parseHighlights(_settings, settings, parseObject) {
+        let highlights = {};
+        for(let key of Object.keys(_settings.highlights)) {
+            if(key === "_default")
+                continue;
+            highlights[key] = parseObject(_settings.highlights[key], _settings.highlights._default);
         }
         if(settings.highlights !== null && settings.highlights !== undefined) {
             for(let key of Object.keys(settings.highlights)) {
-                if(this.settings.highlights[key])
-                    this.settings.highlights[key] = parseObject(this.settings.highlights[key], settings.highlights[key]);
+                if(_settings.highlights[key])
+                    highlights[key] = parseObject(settings.highlights[key], _settings.highlights[key], settings.highlights[key]);
                 else
-                    this.settings.highlights[key] = parseObject(this.settings.highlights._default, settings.highlights[key])
+                    highlights[key] = parseObject(settings.highlights[key], _settings.highlights._default);
             }
         }
-        delete this.settings.highlights._default;
+        return highlights;
     }
 
     get year() {
