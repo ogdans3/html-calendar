@@ -1,5 +1,6 @@
 const moment = require("moment");
 const css = require("./calendarCss");
+const defaultSettings = require("./defaultSettings.js");
 
 let getIdentifier = (settings, name) => {
     let identifier = "";
@@ -13,83 +14,6 @@ let getIdentifiers = (settings, name) => {
     identifiers.push(settings.namespace + settings[name].id);
     identifiers.push(settings.namespace + settings[name].className);
     return identifiers;
-};
-
-defaultSettings = {
-    blockedDates: [],
-    today: {
-        highlight: true,
-        explanation: "Today",
-        color: "#1abc9c"
-    },
-    blocked: {
-        highlight: true,
-        explanation: "Booked",
-        color: "#cc0000"
-    },
-
-    namespace: "calendar-ogdans3-",
-
-    wrapper: {
-        hide: false,
-        css: "",
-        className: "wrapper",
-        id: "wrapper"
-    },
-    month: {
-        hide: false,
-        color: "#660099",
-        css: "",
-        className: "month",
-        id: "month"
-    },
-    navigation: {
-        hide: false,
-        color: "#660099",
-        css: "",
-        className: "navigation",
-        id: "navigation",
-        prevButtonName: "previousButton",
-        nextButtonName: "nextButton"
-    },
-    weekdays: {
-        hide: false,
-        color: "#666",
-        ulColor: "#ddd",
-        css: "",
-        className: "weekdays",
-        id: "weekdays"
-    },
-    days: {
-        hide: false,
-        color: "#eee",
-        css: "",
-        className: "days",
-        id: "days"
-    },
-    explanation: {
-        hide: false,
-        color: "#666",
-        ulColor: "#ddd",
-        css: "",
-        className: "explanation",
-        id: "explanation"
-    },
-
-    locale: "en",
-    onPrev: function(event, wrapper) {console.error("Prev function not implemented")},
-    onNext: function(event, wrapper) {console.error("Next function not implemented!")},
-    util: {},
-    getWrapper: function(element, wrapperClass) {
-        var classes = element.getAttribute("class");
-        while(classes === null || (classes !== null && classes.split(" ").indexOf(wrapperClass) === -1)) {
-            element = element.parentElement;
-            if(element === null)
-                return null;
-            classes = element.getAttribute("class");
-        }
-        return element;
-    },
 };
 
 class Calendar {
@@ -132,8 +56,10 @@ class Calendar {
             }
         }
 
-        for(let key of Object.keys(settings["util"])) {
-            this.settings["util"][key] = settings["util"][key];
+        if(settings["util"] !== null && settings["util"] !== undefined) {
+            for(let key of Object.keys(settings["util"])) {
+                this.settings["util"][key] = settings["util"][key];
+            }
         }
     }
 
@@ -161,8 +87,9 @@ class Calendar {
             return "";
         let identifiers = getIdentifiers(this.settings, "navigation");
         let html = "";
-        html += "<li id = '" + identifiers[0] + "-" + this.settings.navigation.prevButtonName + "' class = '" + identifiers[1] + "-" + this.settings.navigation.prevButtonName + "'><button class = '" + identifiers[1] + "' onclick = 'prevNavButton(event)' >" + "&#10094;" + "</button></li>";
-        html += "<li id = '" + identifiers[0] + "-" + this.settings.navigation.nextButtonName + "' class = '" + identifiers[1] + "-" + this.settings.navigation.nextButtonName + "'><button class = '" + identifiers[1] + "' onclick = 'nextNavButton(event)'>" + "&#10095;" + "</button></li>";
+        let functionMapName = this.settings.namespace + this.settings.functionsMapName;
+        html += "<li id = '" + identifiers[0] + "-" + this.settings.navigation.prevButtonName + "' class = '" + identifiers[1] + "-" + this.settings.navigation.prevButtonName + "'><button class = '" + identifiers[1] + "' onclick = '" + functionMapName + "[\"prevNavButton\"](event)'>" + "&#10094;" + "</button></li>";
+        html += "<li id = '" + identifiers[0] + "-" + this.settings.navigation.nextButtonName + "' class = '" + identifiers[1] + "-" + this.settings.navigation.nextButtonName + "'><button class = '" + identifiers[1] + "' onclick = '" + functionMapName + "[\"nextNavButton\"](event)'>" + "&#10095;" + "</button></li>";
         return html;
     }
 
@@ -170,7 +97,6 @@ class Calendar {
         if(this.settings.month.hide)
             return "";
         let identifiers = getIdentifiers(this.settings, "month");
-        let wrapperIdentifiers = getIdentifiers(this.settings, "wrapper");
         let html = "";
         html += "<div id = '" + identifiers[0] + "' class = '" + identifiers[1] + "'>";
         html += "<ul>";
@@ -179,16 +105,6 @@ class Calendar {
         html += "</ul>";
         html += "</div>";
 
-        html += "<script>" +
-            "function getWrapper(ele){return (" + this.settings.getWrapper + ")(ele, '" + wrapperIdentifiers[1] + "')}" +
-            "function prevNavButton(event){(" + this.settings.onPrev + ")(event, getWrapper(event.target))};" +
-            "function nextNavButton(event){(" + this.settings.onNext + ")(event, getWrapper(event.target))};" +
-            "util = {};";
-        //Add all util functions to the util map
-        for(let utilFuncName of Object.keys(this.settings.util)) {
-            html += "util['" + utilFuncName + "'] = " + this.settings.util[utilFuncName] + ";";
-        }
-        html += "</script>";
         return html;
     }
 
@@ -252,7 +168,32 @@ class Calendar {
         html += this.generateDays();
         html += this.generateCSS();
         html += this.generateColorExplanation();
+        html += this.generateNamespaceScript();
         html += "</div>";
+        return html;
+    }
+
+    generateNamespaceScript() {
+        let html = "";
+        let wrapperIdentifiers = getIdentifiers(this.settings, "wrapper");
+        let functionMapName = this.settings.namespace + this.settings.functionsMapName;
+        html += "<script>" +
+            "" + functionMapName + " = {";
+        html += "getWrapper: function(ele){return this.util.getWrapper(ele, '" + wrapperIdentifiers[1] + "')},";
+        html += "onPrev: " + this.settings.onPrev + ",";
+        html += "onNext: " + this.settings.onNext + ",";
+        html += "prevNavButton: function(event){this.onPrev(event, this.getWrapper(event.target))},";
+        html += "nextNavButton: function(event){this.onNext(event, this.getWrapper(event.target))},";
+        html += "util: {}, ";
+        html += "host: '" + this.settings.host + "',";
+        html += "port: '" + this.settings.port + "',";
+        html += "};";
+
+        //Add all util functions to the util map
+        for(let utilFuncName of Object.keys(this.settings.util)) {
+            html += functionMapName + "['util']['" + utilFuncName + "'] = " + this.settings.util[utilFuncName] + ";";
+        }
+        html += "</script>";
         return html;
     }
 
