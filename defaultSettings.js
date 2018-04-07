@@ -1,22 +1,49 @@
+const moment = require("moment");
+
 defaultSettings = {
-    blockedDates: [],
     locale: "en",
     namespace: "calendar_ogdans3_",
     functionsMapName: "functions",
     host: "localhost",
     port: "8000",
 
-    today: {
-        highlight: true,
-        explanation: "Today",
-        color: "#1abc9c"
+    highlights: {
+        _default: {
+            highlight: true,
+            explanation: "Default",
+            color: "inherit",
+            textColor: "#fff",
+            explanationColor: "#000",
+            className: "",
+            condition: function(date, day, dayString) {},
+            sizeString: "00",
+            css: ""
+        },
+        today: {
+            highlight: true,
+            explanation: "Today",
+            color: "#1abc9c",
+            className: "today",
+            condition: function(date, day, dayString) {
+                return moment().isSame(date, "day");
+            },
+            css: "border-radius: 100%; padding:6px;"
+        },
+        blocked: {
+            highlight: true,
+            explanation: "Booked",
+            color: "#cc0000",
+            className: "blocked",
+            condition: function(date, day, dayString) {
+                for(let d of this.blockedDates) {
+                    if(dayString === d)
+                        return true;
+                }
+                return false;
+            },
+            blockedDates: [],
+        }
     },
-    blocked: {
-        highlight: true,
-        explanation: "Booked",
-        color: "#cc0000"
-    },
-
 
     wrapper: {
         hide: false,

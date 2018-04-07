@@ -19,7 +19,6 @@ let getIdentifiers = (settings, name) => {
 class Calendar {
     constructor(date, settings) {
         this.parseSettings(settings);
-        this.parseBlockedDates(this.settings.blockedDates);
 
         moment.locale(this.settings.locale);
 
@@ -33,23 +32,37 @@ class Calendar {
 
     parseSettings(settings) {
         function parseObject(settingsObj, newSettingsObj) {
+            if(settingsObj === null || settingsObj === undefined)
+                return undefined;
+            console.log(settingsObj, newSettingsObj);
             for(let key of Object.keys(settingsObj)) {
-                if(typeof settings[key] === "object") {
+                if(settingsObj[key].constructor === Array) {
+                    settingsObj[key] = newSettingsObj[key];
+                }
+                else if(typeof settingsObj[key] === "object" && newSettingsObj[key] !== undefined) {
                     settingsObj[key] = parseObject(settingsObj[key], newSettingsObj[key]);
                 }else if(newSettingsObj[key] !== undefined) {
                     settingsObj[key] = newSettingsObj[key];
                 }
             }
+            for(let key of Object.keys(newSettingsObj)) {
+                if(settingsObj[key])
+                    continue;
+                settingsObj[key] = newSettingsObj[key];
+            }
             return settingsObj
         }
 
         this.settings = defaultSettings;
+        this.parseHighlights(settings, parseObject);
         for(let key of Object.keys(defaultSettings)) {
             if(settings[key] !== undefined && settings[key] !== null) {
                 if(settings[key].constructor === Array) {
                     this.settings[key] = settings[key];
                 }else if(typeof settings[key] === "object") {
-                    this.settings[key] = parseObject(this.settings[key], settings[key]);
+                    let tmp = parseObject(this.settings[key], settings[key]);
+                    if(tmp !== undefined)
+                        this.settings[key] = tmp;
                 }else {
                     this.settings[key] = settings[key];
                 }
@@ -63,15 +76,36 @@ class Calendar {
         }
     }
 
-    parseBlockedDates(dates) {
-        this._blockedDates = {};
-        for(let day of dates) {
-            this._blockedDates[day] = true;
+    parseHighlights(settings, parseObject) {
+        function fill(setting, def) {
+            for(let key of Object.keys(def)) {
+                if(setting[key] === undefined || setting[key] === null) {
+                    //TODO: Handle deep objects
+                    setting[key] = def[key];
+                }
+            }
+            return setting;
         }
+        for(let key of Object.keys(this.settings.highlights)) {
+            this.settings.highlights[key] = fill(this.settings.highlights[key], this.settings.highlights._default);
+        }
+        if(settings.highlights !== null && settings.highlights !== undefined) {
+            for(let key of Object.keys(settings.highlights)) {
+                if(this.settings.highlights[key])
+                    this.settings.highlights[key] = parseObject(this.settings.highlights[key], settings.highlights[key]);
+                else
+                    this.settings.highlights[key] = parseObject(this.settings.highlights._default, settings.highlights[key])
+            }
+        }
+        delete this.settings.highlights._default;
     }
 
     get year() {
         return this._momentDate.format(this.yearFormat);
+    }
+
+    get monthNumber() {
+        return this._momentDate.format("MM");
     }
 
     get month() {
@@ -142,11 +176,15 @@ class Calendar {
             if(day < 10) {
                 stringDay = "0" + stringDay;
             }
-            if(this.settings.blocked.highlight && (this._blockedDates[stringDay] || this._blockedDates[stringDay])) {
-                classes.push("blocked");
-            }
-            if(this.settings.today.highlight && this._momentDate.date() === day) {
-                classes.push("today");
+            let m = moment(this.year + this.monthNumber + stringDay);
+            for(let key of Object.keys(this.settings.highlights)) {
+                let obj = this.settings.highlights[key];
+                if(obj === null || obj === undefined || obj.highlight === false) {
+                    continue;
+                }
+                if(obj.condition && obj.condition(m, day, stringDay)) {
+                    classes.push(obj.className);
+                }
             }
             html += "<li><span class = '" + classes.join(" ") + "'>" + stringDay + "</span></li>";
         }
@@ -204,11 +242,12 @@ class Calendar {
         let html = "";
         html += "<ul id = '" + identifiers[0] + "' class = '" + identifiers[1] + "'>";
 
-        if(this.settings.today.highlight) {
-            html += "<li>" + "<span class = 'today'>" + "<span style = 'visibility: hidden'>00</span>" + "</span>" + this.settings.today.explanation + "</li>";
-        }
-        if(this.settings.blocked.highlight) {
-            html += "<li>" + "<span class = 'blocked'>" + "<span style = 'visibility: hidden'>00</span>" + "</span>" + this.settings.blocked.explanation + "</li>";
+        for(let key of Object.keys(this.settings.highlights)) {
+            let obj = this.settings.highlights[key];
+
+            if(obj.highlight) {
+                html += "<li class = '" + obj.className + "'>" + "<span class = '" + obj.className + "'>" + "<span style = 'visibility: hidden'>" + (obj.sizeString || "00") + "</span>" + "</span>" + obj.explanation + "</li>";
+            }
         }
 
         html += "</ul>";

@@ -15,7 +15,28 @@ app.get("/", (req, res) => {
 
 function test(year, month, day) {
     let cal = new Calendar("" + year + month + day, {
-        blockedDates: ["01", "02","03","05","10","20","21"],
+        highlights: {
+            blocked: {
+                blockedDates: ["01", "02","03","05","10","20","21"],
+            },
+            holiday: {
+                highlight: true,
+                explanation: "Holiday",
+                color: "#fff",
+                textColor: "#000",
+                className: "holiday",
+                condition: function(date, day, dayString) {
+                    for(let d of this.holidays) {
+                        if(dayString === d)
+                            return true;
+                    }
+                    return false;
+                },
+                holidays: ["29", "30"],
+                sizeString: "00",
+                css: ""
+            }
+        }
     }).toHTML();
 
     return cal;

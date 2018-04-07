@@ -125,18 +125,15 @@ let cssFuncs = {
                 color: #777;\
                 font-weight: bold;\
             }";
-        css += "\
-                " + identifier + " li span.today{\
-                    border-radius: 100%;\
-                    padding: 6px;\
-                    background: " + settings.today.color + ";\
-                    color: white !important\
-                }\
-                " + identifier + " li span.blocked {\
-                    padding: 4px;\
-                    background: " + settings.blocked.color + ";\
-                    color: white !important\
-                }";
+        for(let key of Object.keys(settings.highlights)) {
+            let obj = settings.highlights[key];
+            css += "" + identifier + " li span." + obj.className + "{ \
+                    padding: 4px; \
+                    color:" + obj.textColor + "; \
+                    background: " + obj.color + ";" +
+                obj.css +
+                "}";
+        }
         //.days li span.today, .explanation li span.today{\
         //.days li span.blocked, .explanation li span.blocked {\
         css += settings.days.css;
@@ -164,18 +161,18 @@ let cssFuncs = {
                 margin-right: 5px;\
                 font-size: 8px;\
             }";
-        css += "\
-                " + identifier + " li span.today{\
-                    border-radius: 100%;\
-                    padding: 6px;\
-                    background: " + settings.today.color + ";\
-                    color: white !important\
-                }\
-                " + identifier + " li span.blocked {\
-                    padding: 4px;\
-                    background: " + settings.blocked.color + ";\
-                    color: white !important\
-                }";
+
+        for(let key of Object.keys(settings.highlights)) {
+            let obj = settings.highlights[key];
+            css += "" + identifier + " li span." + obj.className + "{ \
+                    padding: 4px; \
+                    background: " + obj.color + ";" +
+                    obj.css +
+                    "}";
+            css += "" + identifier + " li." + obj.className + "{ \
+                        color: " + obj.explanationColor + ";\
+                    }";
+        }
         css += settings.explanation.css;
         return css;
     }
