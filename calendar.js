@@ -191,12 +191,12 @@ class Calendar {
     generateWrapper() {
         let identifiers = getIdentifiers(this.settings, "wrapper");
         let html = "<div id = '" + identifiers[0] + "' class = '" + identifiers[1] + "' data-year = '" + this.year + "' data-month = '" + this._momentDate.month() + "' data-day = '" + this.day + "'>";
+        html += this.generateNamespaceScript();
+        html += this.generateCSS();
         html += this.generateMonth();
         html += this.generateWeekdays();
         html += this.generateDays();
-        html += this.generateCSS();
         html += this.generateColorExplanation();
-        html += this.generateNamespaceScript();
         html += "</div>";
         return html;
     }
