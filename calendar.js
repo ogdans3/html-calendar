@@ -5,15 +5,50 @@ defaultSettings = {
     blockedDates: [],
     today: {
         highlight: true,
-        explanation: "Today"
+        explanation: "Today",
+        color: "#1abc9c"
     },
     blocked: {
         highlight: true,
-        explanation: "Booked"
+        explanation: "Booked",
+        color: "#cc0000"
     },
+
+    wrapper: {
+        hide: false,
+        css: ""
+    },
+    month: {
+        hide: false,
+        color: "#660099",
+        css: ""
+    },
+    navigation: {
+        hide: false,
+        color: "#660099",
+        css: ""
+    },
+    weekdays: {
+        hide: false,
+        color: "#666",
+        ulColor: "#ddd",
+        css: ""
+    },
+    days: {
+        hide: false,
+        color: "#eee",
+        css: ""
+    },
+    explanation: {
+        hide: false,
+        color: "#666",
+        css: ""
+    },
+
     locale: "en",
     onPrev: function(event, wrapper) {console.error("Prev function not implemented")},
     onNext: function(event, wrapper) {console.error("Next function not implemented!")},
+    util: {},
     getWrapper: function(element) {
         var classes = element.getAttribute("class");
         while(classes === null || (classes !== null && classes.split(" ").indexOf("wrapper") === -1)) {
@@ -42,11 +77,32 @@ class Calendar {
     }
 
     parseSettings(settings) {
+        function parseObject(settingsObj, newSettingsObj) {
+            for(let key of Object.keys(settingsObj)) {
+                if(typeof settings[key] === "object") {
+                    settingsObj[key] = parseObject(settingsObj[key], newSettingsObj[key]);
+                }else if(newSettingsObj[key] !== undefined) {
+                    settingsObj[key] = newSettingsObj[key];
+                }
+            }
+            return settingsObj
+        }
+
         this.settings = defaultSettings;
         for(let key of Object.keys(defaultSettings)) {
             if(settings[key] !== undefined && settings[key] !== null) {
-                this.settings[key] = settings[key];
+                if(settings[key].constructor === Array) {
+                    this.settings[key] = settings[key];
+                }else if(typeof settings[key] === "object") {
+                    this.settings[key] = parseObject(this.settings[key], settings[key]);
+                }else {
+                    this.settings[key] = settings[key];
+                }
             }
+        }
+
+        for(let key of Object.keys(settings["util"])) {
+            this.settings["util"][key] = settings["util"][key];
         }
     }
 
@@ -69,12 +125,22 @@ class Calendar {
         return this._momentDate.format(this.dayFormat);
     }
 
+    generateNavigationButtons() {
+        if(this.settings.navigation.hide)
+            return "";
+        let html = "";
+        html += "<li class = 'prev'><button id = 'prevNavButton' class = 'navButton' onclick = 'prevNavButton(event)' >" + "&#10094;" + "</button></li>";
+        html += "<li class = 'next'><button id = 'nextNavButton' class = 'navButton' onclick = 'nextNavButton(event)'>" + "&#10095;" + "</button></li>";
+        return html;
+    }
+
     generateMonth() {
+        if(this.settings.month.hide)
+            return "";
         let html = "";
         html += "<div class = 'month'>";
         html += "<ul>";
-        html += "<li class = 'prev'><button id = 'prevNavButton' class = 'navButton' onclick = 'prevNavButton(event)' >" + "&#10094;" + "</button></li>";
-        html += "<li class = 'next'><button id = 'nextNavButton' class = 'navButton' onclick = 'nextNavButton(event)'>" + "&#10095;" + "</button></li>";
+        html += this.generateNavigationButtons();
         html += "<li>" + this.month + "</br>" + "<span>" + this.year + "</span>" + "</li>";
         html += "</ul>";
         html += "</div>";
@@ -82,19 +148,19 @@ class Calendar {
         html += "<script>" +
             "function getWrapper(ele){return (" + this.settings.getWrapper + ")(ele)}" +
             "function prevNavButton(event){(" + this.settings.onPrev + ")(event, getWrapper(event.target))};" +
-            //"function prevNavButton(event){};" +
             "function nextNavButton(event){(" + this.settings.onNext + ")(event, getWrapper(event.target))};" +
-            //"function nextNavButton(event){};" +
-            "</script>";
-
-        /*html += "<script>" +
-            "document.getElementById('nextNavButton').addEventListener('click'," + this.settings.onNext + ");" +
-            "document.getElementById('prevNavButton').addEventListener('click'," + this.settings.onPrev + ");" +
-            "</script>";*/
+            "util = {};";
+        //Add all util functions to the util map
+        for(let utilFuncName of Object.keys(this.settings.util)) {
+            html += "util['" + utilFuncName + "'] = " + this.settings.util[utilFuncName] + ";";
+        }
+        html += "</script>";
         return html;
     }
 
     generateWeekdays() {
+        if(this.settings.weekdays.hide)
+            return "";
         let html = "";
         html += "<ul class = 'weekdays'>";
 
@@ -107,6 +173,8 @@ class Calendar {
     }
 
     generateDays() {
+        if(this.settings.days.hide)
+            return "";
         let html = "";
         html += "<ul class = 'days'>";
 
@@ -136,7 +204,7 @@ class Calendar {
     }
 
     generateCSS() {
-        let html = "<style>" + css + "</style>";
+        let html = "<style>" + css(this.settings) + "</style>";
         return html;
     }
 
@@ -152,11 +220,17 @@ class Calendar {
     }
 
     generateColorExplanation() {
+        if(this.settings.explanation.hide)
+            return "";
         let html = "";
         html += "<ul class = 'explanation'>";
 
-        html += "<li>" + "<span class = 'active'>" + "<span class = 'hidden'>00</span>" + "</span>" + this.settings.today.explanation + "</li>";
-        html += "<li>" + "<span class = 'blocked'>" + "<span class = 'hidden'>00</span>" + "</span>" + this.settings.blocked.explanation + "</li>";
+        if(this.settings.today.highlight) {
+            html += "<li>" + "<span class = 'today'>" + "<span class = 'hidden'>00</span>" + "</span>" + this.settings.today.explanation + "</li>";
+        }
+        if(this.settings.blocked.highlight) {
+            html += "<li>" + "<span class = 'blocked'>" + "<span class = 'hidden'>00</span>" + "</span>" + this.settings.blocked.explanation + "</li>";
+        }
 
         html += "</ul>";
         return html;

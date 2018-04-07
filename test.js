@@ -9,19 +9,20 @@ app.get("/", (req, res) => {
     let html = '<head><meta name="viewport" content="width=device-width, initial-scale=1.0"></head><body>';
     let cal = test("2018", "03", "06");
     html += cal;
+    console.log(cal);
     html += "</body>";
     res.send(html);
 });
 
 function test(year, month, day) {
-    let onNext = function(event, wrapper) {
-        function createElementFromHTML(htmlString) {
+    let util = {
+        createElementFromHTML: function(htmlString) {
             var div = document.createElement('div');
             div.innerHTML = htmlString;
             return div.firstChild;
-        }
+        },
 
-        function makeHttpObject() {
+        makeHttpObject: function() {
             try {return new XMLHttpRequest();}
             catch (error) {}
             try {return new ActiveXObject("Msxml2.XMLHTTP");}
@@ -30,8 +31,23 @@ function test(year, month, day) {
             catch (error) {}
 
             throw new Error("Could not create HTTP request object.");
+        },
+
+        request: function(host, port, year, month, day, callback) {
+            var self = this;
+            var request = self.makeHttpObject();
+            request.open("GET", "http://" + host + ":" + port + "/" + year + "/" + month + "/" + day, true);
+            request.send(null);
+            request.onreadystatechange = function() {
+                if (request.readyState === 4) {
+                    var html = request.responseText;
+                    callback(html);
+                }
+            };
         }
-        var request = makeHttpObject();
+    };
+
+    let onNext = function(event, wrapper) {
         var year = parseInt(wrapper.getAttribute("data-year"));
         var month = parseInt(wrapper.getAttribute("data-month"));
         if(month === 11) {
@@ -46,34 +62,13 @@ function test(year, month, day) {
         }else {
             month = "" + month;
         }
-        request.open("GET", "http://localhost:8000/" + year + "/" + month + "/01", true);
-        request.send(null);
-        request.onreadystatechange = function() {
-            if (request.readyState == 4) {
-                var html = request.responseText;
-                var newWrapper = createElementFromHTML(html);
-                wrapper.parentElement.replaceChild(newWrapper, wrapper);
-            }
-        };
+
+        util.request("localhost", "8000", year, month, "01", function(html) {
+            var newWrapper = util.createElementFromHTML(html);
+            wrapper.parentElement.replaceChild(newWrapper, wrapper);
+        });
     };
     let onPrev = function(event, wrapper) {
-        function createElementFromHTML(htmlString) {
-            var div = document.createElement('div');
-            div.innerHTML = htmlString;
-            return div.firstChild;
-        }
-
-        function makeHttpObject() {
-            try {return new XMLHttpRequest();}
-            catch (error) {}
-            try {return new ActiveXObject("Msxml2.XMLHTTP");}
-            catch (error) {}
-            try {return new ActiveXObject("Microsoft.XMLHTTP");}
-            catch (error) {}
-
-            throw new Error("Could not create HTTP request object.");
-        }
-        var request = makeHttpObject();
         var year = parseInt(wrapper.getAttribute("data-year"));
         var month = parseInt(wrapper.getAttribute("data-month"));
         if(month === 0) {
@@ -88,21 +83,25 @@ function test(year, month, day) {
         }else {
             month = "" + month;
         }
-        request.open("GET", "http://localhost:8000/" + year + "/" + month + "/01", true);
-        request.send(null);
-        request.onreadystatechange = function() {
-            if (request.readyState == 4) {
-                var html = request.responseText;
-                var newWrapper = createElementFromHTML(html);
-                wrapper.parentElement.replaceChild(newWrapper, wrapper);
-            }
-        };
+
+        util.request("localhost", "8000", year, month, "01", function(html) {
+            var newWrapper = util.createElementFromHTML(html);
+            wrapper.parentElement.replaceChild(newWrapper, wrapper);
+        });
     };
 
     let cal = new Calendar("" + year + month + day, {
         blockedDates: ["01", "02","03","05","10","20","21"],
         onNext: onNext,
-        onPrev: onPrev
+        onPrev: onPrev,
+        locale: "nb",
+        util: util,
+        blocked: {
+            explanation: "Bukket"
+        },
+        today: {
+            highlight: false
+        }
     }).toHTML();
 
     return cal;
