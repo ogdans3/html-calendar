@@ -1,0 +1,117 @@
+ul {list-style-type: none;}
+body {font-family: Verdana, sans-serif;}
+
+.wrapper {
+    width: 300px;
+    height: 300px;
+}
+
+/* Month header */
+.month {
+    padding: 10px 25px;
+    background: #660099;
+    text-align: center;
+}
+
+/* Month list */
+.month ul {
+    margin: 0;
+    padding: 0;
+}
+
+.month ul li {
+    color: white;
+    font-size: 20px;
+    text-transform: uppercase;
+    letter-spacing: 3px;
+}
+
+.month ul li span {
+    font-size: 18px;
+}
+
+/* Previous button inside month header */
+.month .prev {
+    float: left;
+    padding-top: 10px;
+}
+
+/* Next button */
+.month .next {
+    float: right;
+    padding-top: 10px;
+}
+
+.month .navButton{
+    background-color: #660099;
+    border: none;
+    color: white;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+}
+
+/* Weekdays (Mon-Sun) */
+.weekdays, .explanation {
+    margin: 0;
+    padding: 10px 0;
+    background-color:#ddd;
+}
+
+.weekdays li {
+    display: inline-block;
+    width: 13.6%;
+    color: #666;
+    text-align: center;
+}
+
+/* Days (1-31) */
+.days {
+    padding: 10px 0;
+    background: #eee;
+    margin: 0;
+}
+
+.explanation li {
+    list-style-type: none;
+    display: inline-block;
+    text-align: center;
+    font-size:10px;
+    font-weight: bold;
+    padding-left: 10px;
+}
+
+.explanation li span {
+    margin-right: 5px;
+    font-size: 8px;
+}
+
+.days li {
+    list-style-type: none;
+    display: inline-block;
+    width: 13.6%;
+    text-align: center;
+    margin-bottom: 10px;
+    font-size:12px;
+    color: #777;
+    font-weight: bold;
+}
+
+/* Highlight the "current" day */
+.days li span.active, .explanation li span.active{
+    border-radius: 100%;
+    padding: 6px;
+    background: #1abc9c;
+    color: white !important
+}
+
+.days li span.blocked, .explanation li span.blocked {
+    padding: 4px;
+    background: #cc0000;
+    color: white !important
+}
+
+.days span.hidden, .explanation span.hidden {
+    visibility: hidden;
+}
