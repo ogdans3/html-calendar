@@ -27,7 +27,7 @@ let cssFuncs = {
         let identifier = getIdentifier(settings, "wrapper");
         css += "" + identifier + "{\
             width: 300px;\
-            height: 300px;\
+            min-height: 300px;\
         }";
         css += settings.wrapper.css;
         return css;
