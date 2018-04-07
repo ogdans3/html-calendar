@@ -9,7 +9,6 @@ app.get("/", (req, res) => {
     let html = '<head><meta name="viewport" content="width=device-width, initial-scale=1.0"></head><body>';
     let cal = test("2018", "03", "06");
     html += cal;
-    console.log(cal);
     html += "</body>";
     res.send(html);
 });
@@ -94,14 +93,7 @@ function test(year, month, day) {
         blockedDates: ["01", "02","03","05","10","20","21"],
         onNext: onNext,
         onPrev: onPrev,
-        locale: "nb",
         util: util,
-        blocked: {
-            explanation: "Bukket"
-        },
-        today: {
-            highlight: false
-        }
     }).toHTML();
 
     return cal;

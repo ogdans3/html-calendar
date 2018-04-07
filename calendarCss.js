@@ -1,13 +1,18 @@
 const fs = require("fs");
 const contents = fs.readFileSync("./calendar.css", 'utf8');
 
-let get = (settings) => {
+let getIdentifier = function(){return ""};
+let getIdentifiers = function(){return ["", ""]}
+let get = (settings, _getIdentifier, _getIdentifiers) => {
     let css = "";
+    getIdentifier = _getIdentifier;
+    getIdentifiers = _getIdentifiers;
     for(let func of Object.keys(cssFuncs)) {
         css += cssFuncs[func](settings);
     }
     return css;
 };
+
 
 let cssFuncs = {
     body: (settings) => {
@@ -19,7 +24,8 @@ let cssFuncs = {
 
     wrapper: (settings) => {
         let css = "";
-        css += ".wrapper {\
+        let identifier = getIdentifier(settings, "wrapper");
+        css += "" + identifier + "{\
             width: 300px;\
             height: 300px;\
         }";
@@ -29,23 +35,24 @@ let cssFuncs = {
 
     month: (settings) => {
         let css = "";
+        let identifier = getIdentifier(settings, "month");
         css += "\
-            .month {\
+            " + identifier + "{\
                 padding: 10px 25px;\
                 background-color: " + settings.month.color + ";\
                 text-align: center;\
             }\
-            .month ul {\
+            " + identifier + " ul {\
                 margin: 0;\
                 padding: 0;\
             }\
-            .month ul li {\
+            " + identifier + " ul li {\
                 color: white;\
                 font-size: 20px;\
                 text-transform: uppercase;\
                 letter-spacing: 3px;\
             }\
-            .month ul li span {\
+            " + identifier + " ul li span {\
                 font-size: 18px;\
             }";
         css += settings.month.css;
@@ -55,16 +62,19 @@ let cssFuncs = {
     navigation: (settings) => {
         let css = "";
 
+        let identifiers = getIdentifiers(settings, "navigation");
+        let identifier = getIdentifier(settings, "navigation");
+        let monthIdentifier = getIdentifier(settings, "month");
         css += "\
-            .month .prev {\
+            " + monthIdentifier + " #" + identifiers[0] + "-" + settings.navigation.prevButtonName + "." + identifiers[0] + "-" + settings.navigation.prevButtonName + " {\
                 float: left;\
                 padding-top: 10px;\
             }\
-            .month .next {\
+            " + monthIdentifier + " #" + identifiers[0] + "-" + settings.navigation.nextButtonName + "." + identifiers[0] + "-" + settings.navigation.nextButtonName + " {\
                 float: right;\
                 padding-top: 10px;\
             }\
-            .month .navButton{\
+            " + monthIdentifier + " ." + identifiers[1] + "{\
                 background-color: " + settings.navigation.color + ";\
                 border: none;\
                 color: white;\
@@ -79,13 +89,14 @@ let cssFuncs = {
 
     weekdays: (settings) => {
         let css = "";
+        let identifier = getIdentifier(settings, "weekdays");
         css += "\
-            .weekdays, .explanation {\
-                margin: 0;\
-                padding: 10px 0;\
-                background-color:" + settings.weekdays.ulColor + ";\
+            " + identifier + "{\
+                    margin: 0;\
+                    padding: 10px 0;\
+                    background-color:" + settings.weekdays.ulColor + ";\
             }\
-            .weekdays li {\
+            " + identifier + " li {\
                 display: inline-block;\
                 width: 13.6%;\
                 color: #" + settings.weekdays.color +";\
@@ -97,13 +108,14 @@ let cssFuncs = {
 
     days: (settings) => {
         let css = "";
+        let identifier = getIdentifier(settings, "days");
         css += "\
-            .days {\
+            " + identifier + "{\
                 padding: 10px 0;\
                 background: " + settings.days.color + ";\
                 margin: 0;\
             }\
-            .days li {\
+            " + identifier + " li {\
                 list-style-type: none;\
                 display: inline-block;\
                 width: 13.6%;\
@@ -112,18 +124,35 @@ let cssFuncs = {
                 font-size:12px;\
                 color: #777;\
                 font-weight: bold;\
-            }\
-            .days span.hidden, .explanation span.hidden {\
-                visibility: hidden;\
             }";
+        css += "\
+                " + identifier + " li span.today{\
+                    border-radius: 100%;\
+                    padding: 6px;\
+                    background: " + settings.today.color + ";\
+                    color: white !important\
+                }\
+                " + identifier + " li span.blocked {\
+                    padding: 4px;\
+                    background: " + settings.blocked.color + ";\
+                    color: white !important\
+                }";
+        //.days li span.today, .explanation li span.today{\
+        //.days li span.blocked, .explanation li span.blocked {\
         css += settings.days.css;
         return css;
     },
 
     explanation: (settings) => {
         let css = "";
+        let identifier = getIdentifier(settings, "explanation");
+        css += "" + identifier + "{\
+                    margin: 0;\
+                    padding: 10px 0;\
+                    background-color:" + settings.explanation.ulColor + ";\
+                }";
         css += "\
-            .explanation li {\
+            " + identifier + " li {\
                 list-style-type: none;\
                 display: inline-block;\
                 text-align: center;\
@@ -131,18 +160,18 @@ let cssFuncs = {
                 font-weight: bold;\
                 padding-left: 10px;\
             }\
-            .explanation li span {\
+            " + identifier + " li span {\
                 margin-right: 5px;\
                 font-size: 8px;\
             }";
         css += "\
-                .days li span.today, .explanation li span.today{\
+                " + identifier + " li span.today{\
                     border-radius: 100%;\
                     padding: 6px;\
                     background: " + settings.today.color + ";\
                     color: white !important\
                 }\
-                .days li span.blocked, .explanation li span.blocked {\
+                " + identifier + " li span.blocked {\
                     padding: 4px;\
                     background: " + settings.blocked.color + ";\
                     color: white !important\
