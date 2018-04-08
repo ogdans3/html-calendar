@@ -46,6 +46,9 @@ defaultSettings = {
     },
 
     wrapper: {
+        fontSize: "1em",
+        lineHeight: "1em",
+        fontFamily: "Verdana, sans-serif",
         hide: false,
         css: "",
         className: "wrapper",

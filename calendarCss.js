@@ -16,8 +16,10 @@ let get = (settings, _getIdentifier, _getIdentifiers) => {
 let cssFuncs = {
     body: (settings) => {
         let css = "";
-        css += "ul {list-style-type: none;}";
-        css += "body {font-family: Verdana, sans-serif;}";
+        let identifier = getIdentifier(settings, "wrapper");
+        css += identifier + " ul {list-style-type: none;}";
+
+        css += identifier + " li {width: auto; height: auto;}";
         return css;
     },
 
@@ -28,6 +30,11 @@ let cssFuncs = {
             width: 300px;\
             min-height: 300px;\
         }";
+        css += identifier + " {" +
+                "font-family: " + settings.wrapper.fontFamily + ";" +
+                "font-size: " + settings.wrapper.fontSize + ";" +
+                "line-height: " + settings.wrapper.lineHeight + ";" +
+            "}";
         css += settings.wrapper.css;
         return css;
     },
