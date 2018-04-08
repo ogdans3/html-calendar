@@ -1,5 +1,4 @@
 const fs = require("fs");
-const contents = fs.readFileSync("./calendar.css", 'utf8');
 
 let getIdentifier = function(){return ""};
 let getIdentifiers = function(){return ["", ""]}
@@ -178,5 +177,4 @@ let cssFuncs = {
     }
 };
 
-//module.exports = () => {return contents};
 module.exports = get;
