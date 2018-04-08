@@ -20,6 +20,11 @@ let cssFuncs = {
         css += identifier + " ul {list-style-type: none;}";
 
         css += identifier + " li {width: auto; height: auto;}";
+
+        css += identifier + " button {\
+                margin: 0px; \
+                padding: 0px; \
+            }";
         return css;
     },
 
