@@ -39,6 +39,11 @@ function test(year, month, day) {
         highlights: {
             blocked: {
             },
+        },
+        wrapper: {
+            attributes: {
+                "equipment": "testing"
+            }
         }
     }).toHTML();
 

@@ -190,7 +190,14 @@ class Calendar {
 
     generateWrapper() {
         let identifiers = getIdentifiers(this.settings, "wrapper");
-        let html = "<div id = '" + identifiers[0] + "' class = '" + identifiers[1] + "' data-year = '" + this.year + "' data-month = '" + this._momentDate.month() + "' data-day = '" + this.day + "'>";
+        let html = "<div id = '" + identifiers[0] + "' class = '" + identifiers[1] + "' data-year = '" + this.year + "' data-month = '" + this._momentDate.month() + "' data-day = '" + this.day + "' ";
+        let attributes = this.settings.wrapper.attributes;
+        for(let key of Object.keys(attributes)) {
+            let value = attributes[key];
+            html += "data-" + key + " = '" + value + "' ";
+        }
+        html += ">";
+
         html += this.generateNamespaceScript();
         html += this.generateCSS();
         html += this.generateMonth();

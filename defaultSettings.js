@@ -52,7 +52,8 @@ defaultSettings = {
         hide: false,
         css: "",
         className: "wrapper",
-        id: "wrapper"
+        id: "wrapper",
+        attributes: {}
     },
     month: {
         hide: false,
