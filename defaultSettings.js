@@ -4,7 +4,7 @@ defaultSettings = {
     locale: "en",
     namespace: "calendar_ogdans3_",
     functionsMapName: "functions",
-    host: "localhost",
+    host: "http://localhost",
     port: "8000",
 
     highlights: {
@@ -95,6 +95,7 @@ defaultSettings = {
         id: "explanation"
     },
     util: {
+        headers: {},
         createElementFromHTML: function(htmlString) {
             var div = document.createElement('div');
             div.innerHTML = htmlString;
@@ -112,10 +113,27 @@ defaultSettings = {
             throw new Error("Could not create HTTP request object.");
         },
 
-        request: function(host, port, year, month, day, callback) {
+        request: function(host, port, headers, year, month, day, attributes, callback) {
             var self = this;
             var request = self.makeHttpObject();
-            request.open("GET", "http://" + host + ":" + port + "/" + year + "/" + month + "/" + day, true);
+            var url = host;
+            if(port || port === 0) {
+                url += ":" + port;
+            }
+            url += "?";
+            url += "year=" + year + "&month=" + month + "&day=" + day;
+            for(var i = 0; i < attributes.length; i++) {
+                var name = attributes[i].name;
+                if(name === "year" || name === "month" || name === "day")
+                    continue;
+                var value = attributes[i].value;
+                url += "&" + name + "=" + value;
+            }
+
+            request.open("GET", url, true);
+            for(var i = 0; i < Object.keys(headers).length; i++) {
+                request.setRequestHeader(Object.keys(headers)[i], headers[Object.keys(headers)[i]])
+            }
             request.send(null);
             request.onreadystatechange = function() {
                 if (request.readyState === 4) {
@@ -154,7 +172,14 @@ defaultSettings = {
             month = "" + month;
         }
 
-        self.util.request(this.host, this.port, year, month, "01", function(html) {
+        var attributes = [].filter.call(wrapper.attributes, function(at) { return /^data-/.test(at.name); });
+        for(var i = 0; i < attributes.length; i++) {
+            var name = attributes[i].name.replace("data-", "");
+            var value = attributes[i].value;
+            attributes[i] = {name: name, value: value};
+        }
+
+        self.util.request(this.host, this.port, self.util.headers, year, month, "01", attributes, function(html) {
             var newWrapper = self.util.createElementFromHTML(html);
             wrapper.parentElement.replaceChild(newWrapper, wrapper);
         });
@@ -176,7 +201,12 @@ defaultSettings = {
             month = "" + month;
         }
 
-        self.util.request(this.host, this.port, year, month, "01", function(html) {
+        var attributes = [].filter.call(wrapper.attributes, function(at) { return /^data-/.test(at.name); });
+        for(var i = 0; i < attributes.length; i++) {
+            attributes[i].name = attributes[i].name.replace("data-", "");
+        }
+
+        self.util.request(this.host, this.port, self.util.headers, year, month, "01", attributes, function(html) {
             var newWrapper = self.util.createElementFromHTML(html);
             wrapper.parentElement.replaceChild(newWrapper, wrapper);
         });

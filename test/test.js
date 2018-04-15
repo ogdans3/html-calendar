@@ -6,12 +6,12 @@ const port = 8000;
 
 const Calendar = require("../calendar");
 const fs = require("fs");
-const client = fs.readFileSync("./test/client.js", 'utf8');
-const popupClient = fs.readFileSync("./test/popupClient.js", 'utf8');
+const client = fs.readFileSync("./client.js", 'utf8');
+const popupClient = fs.readFileSync("./popupClient.js", 'utf8');
 
 app.use(cors());
 
-app.get("/", (req, res) => {
+app.get("/test", (req, res) => {
     let html = '<head><meta name="viewport" content="width=device-width, initial-scale=1.0"></head><body>';
     /*let cal = test("2018", "03", "06");
     html += cal;*/
@@ -36,6 +36,11 @@ app.get("/popup", (req, res) => {
 
 function test(year, month, day) {
     let cal = new Calendar("" + year + month + day, {
+        util: {
+            headers: {
+                "x-api-key": "api-key-test"
+            }
+        },
         highlights: {
             blocked: {
             },
@@ -48,7 +53,18 @@ function test(year, month, day) {
     }).toHTML();
 
     return cal;
-}
+};
+
+app.get("/", (req, res) => {
+    let year = req.query.year;
+    let month = req.query.month;
+    let day = req.query.day;
+
+    let cal = test(year, month, day);
+    res.header("Access-Control-Allow-Origin", "*");
+    res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+    res.send(cal);
+});
 
 app.get("/:year/:month/:day", (req, res) => {
     let year = req.params.year;

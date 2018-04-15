@@ -221,13 +221,26 @@ class Calendar {
         html += "nextNavButton: function(event){this.onNext(event, this.getWrapper(event.target))},";
         html += "util: {}, ";
         html += "host: '" + this.settings.host + "',";
-        html += "port: '" + this.settings.port + "',";
+        html += "port: '" + this.settings.port + "'";
         html += "};";
 
-        //Add all util functions to the util map
-        for(let utilFuncName of Object.keys(this.settings.util)) {
-            html += functionMapName + "['util']['" + utilFuncName + "'] = " + this.settings.util[utilFuncName] + ";";
-        }
+        let util = function(string, map) {
+            //Add all util functions to the util map
+            for(let utilFuncName of Object.keys(map)) {
+                let tmp = string + "['" +  utilFuncName + "']";
+                if(map[utilFuncName] !== null && typeof map[utilFuncName] === 'object') {
+                    html += tmp + " = {};";
+                    util(tmp, map[utilFuncName]);
+                }else {
+                    if(typeof map[utilFuncName] === "string") {
+                        html += tmp + " = '" + map[utilFuncName] + "';";
+                    }else {
+                        html += tmp + " = " + map[utilFuncName] + ";";
+                    }
+                }
+            }
+        };
+        util(functionMapName + "['util']", this.settings.util);
         html += "</script>";
         return html;
     }
