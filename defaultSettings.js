@@ -1,4 +1,4 @@
-const moment = require("moment");
+const moment = require("./moment.min.js");
 
 defaultSettings = {
     locale: "en",

@@ -1,4 +1,4 @@
-const moment = require("moment");
+const moment = require("./moment.min.js");
 const css = require("./calendarCss");
 const defaultSettings = require("./defaultSettings.js");
 
