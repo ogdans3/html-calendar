@@ -1,5 +1,3 @@
-const fs = require("fs");
-
 let getIdentifier = function(){return ""};
 let getIdentifiers = function(){return ["", ""]}
 let get = (settings, _getIdentifier, _getIdentifiers) => {

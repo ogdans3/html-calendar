@@ -8,14 +8,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/ogdans3/calendar.git"
+    "url": "git+https://github.com/ogdans3/html-calendar.git"
   },
   "author": "Gabriel Berthling-Hansen",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/ogdans3/calendar/issues"
+    "url": "https://github.com/ogdans3/html-calendar/issues"
   },
-  "homepage": "https://github.com/ogdans3/calendar#readme",
+  "homepage": "https://github.com/ogdans3/html-calendar#readme",
   "dependencies": {
     "moment": "^2.22.0"
   },
