@@ -1,6 +1,6 @@
 {
   "name": "html-calendar",
-  "version": "1.0.6",
+  "version": "1.0.7",
   "description": "",
   "main": "calendar.js",
   "scripts": {
@@ -17,10 +17,10 @@
   },
   "homepage": "https://github.com/ogdans3/html-calendar#readme",
   "dependencies": {
-    "moment": "^2.22.0"
+    "moment": "2.22.0"
   },
   "devDependencies": {
-    "cors": "^2.8.4",
-    "express": "^4.16.3"
+    "cors": "2.8.4",
+    "express": "4.16.4"
   }
 }
