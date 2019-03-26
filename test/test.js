@@ -35,7 +35,7 @@ app.get("/popup", (req, res) => {
 });
 
 function test(year, month, day) {
-    let cal = new Calendar("" + year + month + day, {
+    let cal = new Calendar("" + year + "-" + month + "-" + day, {
         util: {
             headers: {
                 "x-api-key": "api-key-test"
