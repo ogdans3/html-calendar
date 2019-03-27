@@ -1,4 +1,5 @@
 const moment = require("./moment-with-locales.min.js");
+const Conditions = require("./conditions/index.js");
 
 defaultSettings = {
     locale: "en",
@@ -17,16 +18,23 @@ defaultSettings = {
             className: "",
             condition: function(date, day, dayString) {},
             sizeString: "00",
-            css: ""
+            css: "",
+            selectedDates: ["2019-03-13"],
         },
         today: {
             highlight: true,
             explanation: "Today",
             color: "#1abc9c",
             className: "today",
-            condition: function(date, day, dayString) {
-                return moment().isSame(date, "day");
-            },
+            condition: "TODAY",
+            css: "border-radius: 100%; padding:6px;"
+        },
+        day: {
+            highlight: false,
+            explanation: "day",
+            color: "#1ab000",
+            className: "day",
+            condition: "AND, TODAY,WEEKDAYS",
             css: "border-radius: 100%; padding:6px;"
         },
         blocked: {
@@ -34,14 +42,7 @@ defaultSettings = {
             explanation: "Booked",
             color: "#cc0000",
             className: "blocked",
-            condition: function(date, day, dayString) {
-                for(let d of this.blockedDates) {
-                    if(dayString === d)
-                        return true;
-                }
-                return false;
-            },
-            blockedDates: [],
+            condition: "SELECTED",
         }
     },
 

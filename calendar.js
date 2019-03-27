@@ -1,6 +1,7 @@
 const moment = require("./moment-with-locales.min.js");
 const css = require("./calendarCss");
 const defaultSettings = require("./defaultSettings.js");
+const Conditions = require("./conditions/index.js");
 
 let getIdentifier = (settings, name) => {
     let identifier = "";
@@ -172,8 +173,11 @@ class Calendar {
                 if(obj === null || obj === undefined || obj.highlight === false) {
                     continue;
                 }
-                if(obj.condition && obj.condition(m, day, stringDay)) {
-                    classes.push(obj.className);
+                if(obj.condition) {
+                    let func = Conditions.fromString(obj.condition)
+                    if(func && func.call(obj, m, day, stringDay)) {
+                        classes.push(obj.className);
+                    }
                 }
             }
             html += "<li><span class = '" + classes.join(" ") + "'>" + stringDay + "</span></li>";
