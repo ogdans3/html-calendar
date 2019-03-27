@@ -19,7 +19,7 @@ defaultSettings = {
             condition: function(date, day, dayString) {},
             sizeString: "00",
             css: "",
-            selectedDates: ["2019-03-13"],
+            selectedDates: [],
         },
         today: {
             highlight: true,
