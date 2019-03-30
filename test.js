@@ -4,7 +4,7 @@ const express = require('express');
 const app = express();
 const port = 8000;
 
-const Calendar = require("./calendar");
+const Calendar = require("./dist/main.js");
 const fs = require("fs");
 const client = fs.readFileSync("./client.js", 'utf8');
 const popupClient = fs.readFileSync("./popupClient.js", 'utf8');

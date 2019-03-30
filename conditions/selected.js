@@ -1,4 +1,4 @@
-const moment = require("./../moment-with-locales.min.js");
+const moment = require("moment/min/moment-with-locales.js");
 
 let selected = function(date, day, dayString) {
     for(let d of this.selectedDates) {

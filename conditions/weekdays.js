@@ -1,4 +1,4 @@
-const moment = require("./../moment-with-locales.min.js");
+const moment = require("moment/min/moment-with-locales.js");
 
 let weekdays = (date) => {
     let day = moment(date).day();

@@ -1,11 +1,8 @@
-const moment = require("./moment-with-locales.min.js");
+const moment = require("moment/min/moment-with-locales.js");
 const css = require("./calendarCss");
 const defaultSettings = require("./defaultSettings.js");
 const Conditions = require("./conditions/index.js");
-const fs = require('fs')
-const path = require('path')
-
-const cssFile = fs.readFileSync(path.resolve(__dirname, './calendar.css'), 'utf8');
+const cssFile = require('./calendar.css');
 
 let getIdentifier = (settings, name) => {
     let identifier = "";
@@ -192,7 +189,7 @@ class Calendar {
     }
 
     generateCSS() {
-        let html = "<style>" + cssFile + "</style>";
+        let html = "<style>" + cssFile.default + "</style>";
         html += "<style>" + css(this.settings, getIdentifier, getIdentifiers) + "</style>";
         return html;
     }
