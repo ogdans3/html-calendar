@@ -1,48 +1,86 @@
 ul {list-style-type: none;}
 body {font-family: Verdana, sans-serif;}
 
-.wrapper {
+.calendar_ogdans3_wrapper {
     width: 300px;
     height: 300px;
 }
 
+ul {
+    list-style-type: none;
+}
+
+li {
+    width: auto; 
+    height: auto;
+}
+
+button {
+    margin: 0px;
+    padding: 0px;
+}
+
+.calendar_ogdans3_wrapper {
+    font-size: 1em;
+    line-height: 1em;
+    font-family: Verdana, sans-serif;
+}
+
+.calendar_ogdans3_month {
+    color: #660099;
+}
+
+.calendar_ogdans3_navigation {
+    background-color: #660099;
+    border: none;
+    color: white;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+}
+
+.calendar_ogdans3_weekdays {
+    color: #666;
+    /*ulColor: "#ddd",*/
+}
+
 /* Month header */
-.month {
+.calendar_ogdans3_month {
     padding: 10px 25px;
-    background: #660099;
+    background-color: #660099;
     text-align: center;
 }
 
-/* Month list */
-.month ul {
+.calendar_ogdans3_month ul {
     margin: 0;
     padding: 0;
 }
 
-.month ul li {
+.calendar_ogdans3_month ul li {
     color: white;
     font-size: 20px;
     text-transform: uppercase;
     letter-spacing: 3px;
 }
 
-.month ul li span {
+.calendar_ogdans3_month ul li span {
     font-size: 18px;
 }
 
 /* Previous button inside month header */
-.month .prev {
+.calendar_ogdans3_month .calendar_ogdans3_navigation-previousButton {
     float: left;
     padding-top: 10px;
 }
 
 /* Next button */
-.month .next {
+.calendar_ogdans3_month .calendar_ogdans3_navigation-nextButton {
     float: right;
     padding-top: 10px;
 }
 
-.month .navButton{
+.calendar_ogdans3_month .calendar_ogdans3_navigation button {
     background-color: #660099;
     border: none;
     color: white;
@@ -53,13 +91,13 @@ body {font-family: Verdana, sans-serif;}
 }
 
 /* Weekdays (Mon-Sun) */
-.weekdays, .explanation {
+.calendar_ogdans3_weekdays, .calendar_ogdans3_explanation {
     margin: 0;
     padding: 10px 0;
     background-color:#ddd;
 }
 
-.weekdays li {
+.calendar_ogdans3_weekdays li {
     display: inline-block;
     width: 13.6%;
     color: #666;
@@ -67,13 +105,13 @@ body {font-family: Verdana, sans-serif;}
 }
 
 /* Days (1-31) */
-.days {
+.calendar_ogdans3_days {
     padding: 10px 0;
     background: #eee;
     margin: 0;
 }
 
-.explanation li {
+.calendar_ogdans3_explanation li {
     list-style-type: none;
     display: inline-block;
     text-align: center;
@@ -82,12 +120,12 @@ body {font-family: Verdana, sans-serif;}
     padding-left: 10px;
 }
 
-.explanation li span {
+.calendar_ogdans3_explanation li span {
     margin-right: 5px;
     font-size: 8px;
 }
 
-.days li {
+.calendar_ogdans3_days li {
     list-style-type: none;
     display: inline-block;
     width: 13.6%;
@@ -99,8 +137,8 @@ body {font-family: Verdana, sans-serif;}
 }
 
 .calendar_ogdans3_explanation li span {
-    width: 12px;
-    height: 12px;
+    width: 15px;
+    height: 15px;
     display: inline-block;
 }
 
@@ -110,6 +148,11 @@ body {font-family: Verdana, sans-serif;}
     background: #1abc9c;
     width: 15px;
     height: 15px;
+    display: inline-block;
+}
+
+.calendar_ogdans3_explanation li span.circle {
+    padding: 3px;
 }
 
 .calendar_ogdans3_days li span.square, .calendar_ogdans3_explanation li span.square {
