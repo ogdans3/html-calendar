@@ -98,20 +98,26 @@ body {font-family: Verdana, sans-serif;}
     font-weight: bold;
 }
 
-/* Highlight the "current" day */
-.days li span.active, .explanation li span.active{
+.calendar_ogdans3_explanation li span {
+    width: 12px;
+    height: 12px;
+    display: inline-block;
+}
+
+.calendar_ogdans3_days li span.circle, .calendar_ogdans3_explanation li span.circle {
     border-radius: 100%;
     padding: 6px;
     background: #1abc9c;
-    color: white !important
+    width: 15px;
+    height: 15px;
 }
 
-.days li span.blocked, .explanation li span.blocked {
+.calendar_ogdans3_days li span.square, .calendar_ogdans3_explanation li span.square {
     padding: 4px;
     background: #cc0000;
     color: white !important
 }
 
-.days span.hidden, .explanation span.hidden {
+.calendar_ogdans3_days span.hidden, .calendar_ogdans3_explanation span.hidden {
     visibility: hidden;
 }
