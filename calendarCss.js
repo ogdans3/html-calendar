@@ -18,12 +18,12 @@ let cssFuncs = {
         for(let key of Object.keys(settings.highlights)) {
             let obj = settings.highlights[key];
             css += `
-                ${identifier} li span.${obj.className}{
+                ${identifier} li span.${obj.className.split(" ").join(".")}{
                     color: ${obj.textColor};
                     background-color: ${obj.color};
                     ${obj.css}
                 }
-                ${identifier} li span.${obj.className} {
+                ${identifier} li span.${obj.className.split(" ").join(".")} {
                     ${obj.css}
                 }
             `;
@@ -39,11 +39,11 @@ let cssFuncs = {
         for(let key of Object.keys(settings.highlights)) {
             let obj = settings.highlights[key];
             css += `
-                ${identifier} li span.${obj.className}{
+                ${identifier} li span.${obj.className.split(" ").join(".")}{
                     background-color: ${obj.color};
                     ${obj.css}
                 }
-                ${identifier} li.${obj.className} {
+                ${identifier} li.${obj.className.split(" ").join(".")} {
                     color: ${obj.explanationColor};
                 }
             `;

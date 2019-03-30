@@ -7,7 +7,9 @@ const cssFile = require('./calendar.css');
 let getIdentifier = (settings, name) => {
     let identifier = "";
     identifier += "#" + settings.namespace + settings[name].id;
-    identifier += "." + settings.namespace + settings[name].className;
+    for(var cls of settings[name].className.split(" ")) {
+        identifier += "." + settings.namespace + cls;
+    }
     return identifier;
 };
 
@@ -15,6 +17,9 @@ let getIdentifiers = (settings, name) => {
     let identifiers = [];
     identifiers.push(settings.namespace + settings[name].id);
     identifiers.push(settings.namespace + settings[name].className);
+    for(var cls of settings[name].className.split(" ")) {
+        identifiers.push(settings.namespace + cls);
+    }
     return identifiers;
 };
 

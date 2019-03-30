@@ -25,7 +25,7 @@ defaultSettings = {
             highlight: true,
             explanation: "Today",
             color: "#1abc9c",
-            className: "circle",
+            className: "circle today",
             condition: "TODAY",
             //css: "border-radius: 100%; padding:6px;"
         },
