@@ -41,7 +41,7 @@ defaultSettings = {
             highlight: true,
             explanation: "Booked",
             color: "#cc0000",
-            className: "blocked",
+            className: "square blocked",
             condition: "SELECTED",
         }
     },

@@ -142,9 +142,12 @@ button {
     display: inline-block;
 }
 
+.calendar_ogdans3_days li span {
+    padding: 6px;
+}
+
 .calendar_ogdans3_days li span.circle, .calendar_ogdans3_explanation li span.circle {
     border-radius: 100%;
-    padding: 6px;
     background: #1abc9c;
     width: 15px;
     height: 15px;
@@ -152,13 +155,20 @@ button {
 }
 
 .calendar_ogdans3_explanation li span.circle {
-    padding: 3px;
+    padding: 4px;
+}
+
+.calendar_ogdans3_explanation li span.square {
+    padding: 2px;
+}
+
+.calendar_ogdans3_days li span.square {
+    padding: 4px;
 }
 
 .calendar_ogdans3_days li span.square, .calendar_ogdans3_explanation li span.square {
-    padding: 4px;
     background: #cc0000;
-    color: white !important
+    color: white;
 }
 
 .calendar_ogdans3_days span.hidden, .calendar_ogdans3_explanation span.hidden {
