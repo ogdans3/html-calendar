@@ -107,7 +107,7 @@ button {
 /* Days (1-31) */
 .calendar_ogdans3_days {
     padding: 10px 0;
-    background: #eee;
+    background-color: #eee;
     margin: 0;
 }
 
@@ -148,7 +148,7 @@ button {
 
 .calendar_ogdans3_days li span.circle, .calendar_ogdans3_explanation li span.circle {
     border-radius: 100%;
-    background: #1abc9c;
+    background-color: #1abc9c;
     width: 15px;
     height: 15px;
     display: inline-block;
@@ -167,7 +167,7 @@ button {
 }
 
 .calendar_ogdans3_days li span.square, .calendar_ogdans3_explanation li span.square {
-    background: #cc0000;
+    background-color: #cc0000;
     color: white;
 }
 
