@@ -18,12 +18,12 @@ let cssFuncs = {
         for(let key of Object.keys(settings.highlights)) {
             let obj = settings.highlights[key];
             css += `
-                ${identifier} li span.${obj.className.split(" ").join(".")}{
+                ${identifier} li span.${obj.className.split(" ").join(".")}${obj.pseudoElements.split(" ").join("")}{
                     color: ${obj.textColor};
                     background-color: ${obj.color};
                     ${obj.css}
                 }
-                ${identifier} li span.${obj.className.split(" ").join(".")} {
+                ${identifier} li span.${obj.className.split(" ").join(".")}${obj.pseudoElements.split(" ").join("")}{
                     ${obj.css}
                 }
             `;

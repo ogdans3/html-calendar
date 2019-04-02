@@ -37,6 +37,18 @@ class Calendar {
         this.dayFormat = "d";
 
         this.clickable = settings.clickable;
+        this.disableHighlightHoversIfNotClickable();
+    }
+
+    disableHighlightHoversIfNotClickable() {
+        if(!this.clickable) {
+            for(var key in this.settings.highlights) {
+                var value = this.settings.highlights[key];
+                if(value.hover) {
+                    value.highlight = false;
+                }
+            }
+        }
     }
 
     parseSettings(settings) {
@@ -271,7 +283,7 @@ class Calendar {
         for(let key of Object.keys(this.settings.highlights)) {
             let obj = this.settings.highlights[key];
 
-            if(obj.highlight) {
+            if(obj.highlight && obj.showExplanation) {
                 html += "<li class = '" + obj.className + "'>" + "<span class = '" + obj.className + "'>" + "<span style = 'visibility: hidden'>" + (obj.sizeString || "00") + "</span>" + "</span>" + obj.explanation + "</li>";
             }
         }

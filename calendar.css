@@ -170,7 +170,17 @@ button {
     visibility: hidden;
 }
 
+
+.calendar_ogdans3_days span.day.hover {
+    color: initial;
+    background-color: initial;
+}
+
 .calendar_ogdans3_days span.day.clickable:hover {
+    cursor: pointer;
+}
+
+/*.calendar_ogdans3_days span.day.clickable:hover {
     cursor: pointer;
 
     border-radius: 100%;
@@ -179,4 +189,4 @@ button {
     color: #ffffff;
     width: 15px;
     height: 15px;
-}
+}*/

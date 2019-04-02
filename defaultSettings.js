@@ -13,10 +13,13 @@ defaultSettings = {
         _default: {
             highlight: true,
             explanation: "Default",
+            showExplanation: true,
             color: "inherit",
             textColor: "#fff",
             explanationColor: "#000",
             className: "",
+            pseudoElements: "",
+            hover: false,
             condition: function(date, day, dayString) {},
             sizeString: "00",
             css: "",
@@ -36,6 +39,16 @@ defaultSettings = {
             color: "#cc0000",
             className: "square blocked",
             condition: "SELECTED",
+        },
+        hover: {
+            highlight: true,
+            showExplanation: false,
+            explanation: "Hover",
+            color: "blue",
+            hover: true,
+            className: "hover circle clickable",
+            pseudoElements: ":hover",
+            condition: "OR,WEEKENDS,WEEKDAYS",
         }
     },
 
