@@ -49,7 +49,8 @@ function test(year, month, day) {
             attributes: {
                 "equipment": "testing"
             }
-        }
+        },
+        clickable: true,
     }).toHTML();
 
     return cal;

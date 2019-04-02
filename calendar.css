@@ -169,3 +169,14 @@ button {
 .calendar_ogdans3_days span.hidden, .calendar_ogdans3_explanation span.hidden {
     visibility: hidden;
 }
+
+.calendar_ogdans3_days span.day.clickable:hover {
+    cursor: pointer;
+
+    border-radius: 100%;
+    background-color: #660099;
+    background-color: rgba(102, 0, 153, .75);
+    color: #ffffff;
+    width: 15px;
+    height: 15px;
+}

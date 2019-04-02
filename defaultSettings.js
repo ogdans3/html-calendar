@@ -7,6 +7,7 @@ defaultSettings = {
     functionsMapName: "functions",
     host: "http://localhost",
     port: "8000",
+    clickable: false,
 
     highlights: {
         _default: {
@@ -28,14 +29,6 @@ defaultSettings = {
             className: "circle today",
             condition: "TODAY",
             //css: "border-radius: 100%; padding:6px;"
-        },
-        day: {
-            highlight: false,
-            explanation: "day",
-            color: "#1ab000",
-            className: "day",
-            condition: "AND, TODAY,WEEKDAYS",
-            css: "border-radius: 100%; padding:6px;"
         },
         blocked: {
             highlight: true,

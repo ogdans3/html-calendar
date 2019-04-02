@@ -35,6 +35,8 @@ class Calendar {
         this.yearFormat = "YYYY";
         this.monthFormat = "MMMM";
         this.dayFormat = "d";
+
+        this.clickable = settings.clickable;
     }
 
     parseSettings(settings) {
@@ -169,6 +171,9 @@ class Calendar {
         }
         for(let day = 1; day <= days; day++) {
             let classes = [];
+            if(this.clickable) {
+                classes.push("clickable");
+            }
             let stringDay = "" + day;
             if(day < 10) {
                 stringDay = "0" + stringDay;
@@ -186,7 +191,7 @@ class Calendar {
                     }
                 }
             }
-            html += "<li><span class = '" + classes.join(" ") + "'>" + stringDay + "</span></li>";
+            html += "<li><span onClick=\"" + this.settings.namespace + "day_onClick(event, '" + this.year + "-" + this.monthNumber + "-" + day+ "', '" + this.year+ "', '" + this.monthNumber + "', '" + day + "')\" class='day " + classes.join(" ") + "'>" + stringDay + "</span></li>";
         }
 
         html += "</ul>";
